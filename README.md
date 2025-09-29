@@ -1,70 +1,231 @@
 # git-reviewer
 
-A Python project called git-reviewer
+AI-powered code review tool that generates comprehensive reviews of git changes using multiple Large Language Models (LLMs) simultaneously.
 
-## Features
+[![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-- **CLI Application** with Typer framework
-- **Rich terminal output** with colors and formatting
-- **Interactive commands** with help and configuration
-- **Global installation** support via pipx
-- **Modern Python tooling** (uv, ruff, black, mypy, pytest)
-- **Pre-commit hooks** for code quality
-- **GitHub Actions** CI/CD workflows
-- **Comprehensive testing** with coverage reports
-- **Version management** with automated bumping
-- **Professional project structure** following best practices
+## Overview
+
+git-reviewer analyzes git repository changes and generates detailed code reviews using multiple AI models in parallel. It extracts git diffs, combines them with contextual information, and generates structured reviews that highlight issues, suggestions, and improvements.
+
+### Key Features
+
+- **Multi-Model Analysis**: Run reviews with multiple AI models simultaneously (GPT-4, Claude, Gemini, etc.)
+- **Git Integration**: Automatically extracts diffs, commit information, and repository context
+- **Template-Based Reviews**: Customizable review templates with structured output
+- **Context-Aware**: Include additional context files to inform the review process
+- **Flexible Configuration**: Global and local configuration with YAML-based settings
+- **Rich Output**: Beautiful terminal output with JSON formatting and result summaries
+- **Python API**: Use git-reviewer programmatically in your own tools
+- **nllm Integration**: Built on the nllm library for robust multi-model execution
 
 ## Installation
 
-### Development Installation
+### Prerequisites
+
+- Python 3.12 or higher
+- Git
+- [llm CLI tool](https://github.com/simonw/llm) with configured models
+- pipx (recommended for global installation)
+
+### Global Installation (Recommended)
 
 ```bash
-# Clone the repository
+# Install from source using pipx
 git clone https://github.com/ryannikolaidis/git-reviewer.git
 cd git-reviewer
-
-# Install dependencies
-make install-dev
-```
-
-### Global Installation
-Install git_reviewer globally using pipx (recommended):
-
-```bash
-# Build and install globally
-make install-package
-
-# Or manually:
-make build
 pipx install .
+
+# Or using the development Makefile
+make install-package
 ```
 
-After installation, you can use the `git-reviewer` command from anywhere.
-
-### Uninstall
+### Local Development Installation
 
 ```bash
-make uninstall-package
-# Or: pipx uninstall git_reviewer
+# Clone and set up development environment
+git clone https://github.com/ryannikolaidis/git-reviewer.git
+cd git-reviewer
+make install-dev  # Installs with uv and sets up pre-commit hooks
+```
+
+### Model Setup
+
+git-reviewer requires the `llm` CLI tool with configured models:
+
+```bash
+# Install llm
+pip install llm
+
+# Configure your API keys
+llm keys set openai
+llm keys set anthropic
+
+# Verify models are available
+llm models list
 ```
 ## Usage
 
+### Quick Start
+
 ```bash
+# Initialize configuration (creates ~/.git-reviewer/config.yaml)
+git-reviewer init-config
+
+# Run a basic review on current git changes
+git-reviewer review
+
+# Review with specific models
+git-reviewer review --model gpt-4 --model claude-3-sonnet
+
+# Review with additional context files
+git-reviewer review --context-file src/config.py --context-file docs/api.md
+
+# Check configuration and setup
+git-reviewer check
+```
+
+### CLI Commands
+
+```bash
+# Review git changes (main command)
+git-reviewer review [OPTIONS] [REPO_PATH]
+
+# Initialize default configuration
+git-reviewer init-config
+
+# Check configuration and dependencies
+git-reviewer check
+
 # Show help
 git-reviewer --help
+```
 
-# Say hello
-git-reviewer hello
-git-reviewer hello --name Alice
-git-reviewer hello --name Bob --loud
+### Review Command Options
 
-# Show application info
-git-reviewer info
+- `--model`: Specify models to use (repeatable)
+- `--context-file`: Include additional context files (repeatable)
+- `--output-dir`: Directory for review outputs
+- `--base-branch`: Base branch for diff (default: main)
+- `--context-lines`: Number of context lines in git diff
+- `--diff-scope`: Diff scope ('all' or 'committed')
+- `--timeout`: Timeout per model in seconds
+- `--retries`: Number of retries per model
+- `--verbose`: Show detailed output
 
-# Manage configuration
-git-reviewer config
-git-reviewer config --show
+### Configuration
+
+git-reviewer uses YAML configuration files with the following precedence:
+
+1. Local: `.git-reviewer-config.yaml` (in repository)
+2. Global: `~/.git-reviewer/config.yaml`
+
+Example configuration:
+
+```yaml
+# Global configuration: ~/.git-reviewer/config.yaml
+models:
+  - name: gpt-4
+    options: ["-o", "temperature", "0.1"]
+  - name: claude-3-sonnet
+    options: ["-o", "temperature", "0.0"]
+
+defaults:
+  timeout: 120
+  retries: 1
+  outdir: ~/code-reviews
+
+git:
+  context_lines: 3
+  base_branch: main
+  diff_scope: all
+```
+
+### Python API
+
+git-reviewer can be used programmatically:
+
+```python
+from git_reviewer.api import review_repository
+
+# Review current repository
+nllm_results = review_repository()
+
+# Review specific repository with options
+nllm_results = review_repository(
+    repo_path="/path/to/repo",
+    models=["gpt-4", "claude-3-sonnet"],
+    context_files=["src/config.py", "README.md"],
+    output_dir="/tmp/reviews",
+    base_branch="develop"
+)
+
+# Access results directly from nllm
+for result in nllm_results.results:
+    if result.status == "ok":
+        print(f"Model: {result.model}")
+        if hasattr(result, 'json') and result.json:
+            # Use structured JSON output
+            summary = result.json.get('summary', {})
+            print(f"Issues found: {len(summary.get('issues', []))}")
+        else:
+            # Use raw text output
+            print(f"Review: {result.text[:200]}...")
+```
+
+## Examples
+
+### Basic Review
+
+```bash
+# Review current changes against main branch
+cd /path/to/your/repo
+git-reviewer review
+```
+
+### Advanced Review
+
+```bash
+# Comprehensive review with context and specific models
+git-reviewer review \
+    --model gpt-4 \
+    --model claude-3-sonnet \
+    --context-file src/core.py \
+    --context-file docs/architecture.md \
+    --base-branch develop \
+    --output-dir ~/reviews \
+    --verbose
+```
+
+### Integration with CI/CD
+
+```yaml
+# .github/workflows/code-review.yml
+name: AI Code Review
+on: [pull_request]
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+      - name: Install git-reviewer
+        run: pipx install git+https://github.com/ryannikolaidis/git-reviewer.git
+      - name: Run AI review
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          git-reviewer review --base-branch origin/main --output-dir ./review-results
+      - name: Upload review results
+        uses: actions/upload-artifact@v3
+        with:
+          name: ai-review
+          path: ./review-results
 ```
 
 ## Development
@@ -72,89 +233,109 @@ git-reviewer config --show
 ### Setup
 
 ```bash
-# Install development dependencies
-make install-dev
-
-# Install pre-commit hooks
-uv run pre-commit install
+# Clone and install development environment
+git clone https://github.com/ryannikolaidis/git-reviewer.git
+cd git-reviewer
+make install-dev  # Sets up uv environment and pre-commit hooks
 ```
 
-### Common Commands
+### Development Commands
 
 ```bash
-# Run tests
-make test
+# Code quality
+make lint          # Run ruff and mypy
+make tidy          # Auto-fix formatting with ruff and black
+make check         # Run all quality checks
 
-# Run linting
-make lint
+# Testing
+make test          # Run pytest
+make test-cov      # Run tests with coverage
 
-# Fix formatting
-make tidy
+# Development workflow
+make version-dev   # Bump development version
+make build         # Build package
+make install-package  # Install globally with pipx
 
-# Run all checks
-make check
-
-# Build documentation
-make docs
-
-# Build and serve docs locally
-make docs-serve
-
-# Build package
-make build
-
-# Install globally
-make install-package
-
-# Bump version
-make version-dev
+# Documentation
+make docs          # Build Sphinx documentation
+make docs-serve    # Build and serve docs locally
 ```
 
-### Testing
+### Architecture
 
+git-reviewer follows a modular architecture:
+
+- **CLI Layer** (`cli.py`): Typer-based command interface
+- **API Layer** (`api.py`): Python API for programmatic usage
+- **Core Components**:
+  - `git_integration.py`: Git repository operations
+  - `nllm_runner.py`: nllm integration for multi-model execution
+  - `template.py`: Review template processing
+  - `config.py`: Configuration management
+  - `context.py`: Context file processing
+
+See `docs/design/` for detailed architectural documentation.
+
+## Troubleshooting
+
+### Common Issues
+
+**"nllm not available" error**
 ```bash
-# Run tests with coverage
-make test-cov
+# Ensure llm is installed and configured
+pip install llm
+llm models list
 ```
 
-## Documentation
-
-This project uses [Sphinx](https://www.sphinx-doc.org/) for documentation generation.
-
-### Building Documentation
-
+**"No models configured" error**
 ```bash
-# Build HTML documentation
-make docs
-
-# Build and serve locally (opens in browser at http://localhost:8080)
-make docs-serve
-
-# Clean documentation build files
-make clean
+# Initialize configuration
+git-reviewer init-config
+# Edit ~/.git-reviewer/config.yaml to add your models
 ```
 
-### Editing Documentation
+**Permission errors with git**
+```bash
+# Ensure you're in a git repository
+git status
+# Check git configuration
+git config --list
+```
 
-Documentation source files live under `docs/sphinx/`:
+### Model Configuration
 
-- `docs/sphinx/index.rst` - Main documentation page
-- `docs/sphinx/installation.rst` - Installation instructions
-- `docs/sphinx/usage.rst` - Usage examples and tutorials
-- `docs/sphinx/api.rst` - Auto-generated API reference
+Different models require different option formats:
 
-### GitHub Pages Deployment
+```yaml
+models:
+  # OpenAI models
+  - name: gpt-4
+    options: ["-o", "temperature", "0.1", "-o", "max_tokens", "4000"]
 
-Documentation is automatically built and deployed to GitHub Pages when you push to the `main` branch. The docs will be available at:
+  # Anthropic models
+  - name: claude-3-sonnet
+    options: ["-o", "temperature", "0.0", "--system", "You are a code reviewer"]
 
-`https://ryannikolaidis.github.io/git-reviewer/`
+  # Google models
+  - name: gemini-pro
+    options: ["-o", "temperature", "0.2"]
+```
 
-To enable GitHub Pages:
-1. Go to your repository Settings → Pages
-2. Select "GitHub Actions" as the source
-3. Push to main branch to trigger the first build
+## Contributing
 
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature-name`
+3. Make your changes and add tests
+4. Run the test suite: `make check`
+5. Commit your changes: `git commit -am 'Add feature'`
+6. Push to the branch: `git push origin feature-name`
+7. Submit a pull request
 
 ## License
 
 MIT License - see [LICENSE](LICENSE) file for details.
+
+## Related Projects
+
+- [nllm](https://github.com/ryannikolaidis/nllm) - Multi-model LLM execution library
+- [llm](https://github.com/simonw/llm) - Command-line tool for interacting with LLMs
