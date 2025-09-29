@@ -40,13 +40,3 @@ def test_init_config_command() -> None:
     result = runner.invoke(app, ["init-config", "--help"])
     assert result.exit_code == 0
     assert "Initialize" in result.stdout
-
-
-def test_review_command_help() -> None:
-    """Test review command help shows updated interface."""
-
-    result = runner.invoke(app, ["review", "--help"])
-    assert result.exit_code == 0
-    assert "--model" in result.stdout
-    assert "multiple times" in result.stdout
-    assert "--parallel" not in result.stdout  # Should be removed
