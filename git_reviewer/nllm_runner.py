@@ -1,6 +1,5 @@
 """nllm integration and command execution for git-reviewer."""
 
-import json
 from pathlib import Path
 from typing import Any
 
@@ -70,7 +69,7 @@ class NLLMRunner:
                 timeout=self.defaults.get("timeout", 120),
                 retries=self.defaults.get("retries", 0),
                 stream=False,  # Disable streaming for API usage
-                quiet=True,    # Reduce console output
+                quiet=True,  # Reduce console output
                 llm_args=[prompt],
             )
 
@@ -81,6 +80,7 @@ class NLLMRunner:
         """Check if nllm Python API is available."""
         try:
             import nllm
+
             return True, f"nllm Python API available (version: {nllm.__version__})"
         except ImportError:
             return False, "nllm Python API not available. Please install nllm package."

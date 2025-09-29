@@ -44,7 +44,11 @@ def review(
         None, "--context-lines", help="Number of context lines in git diff"
     ),
     base_branch: str | None = typer.Option(None, "--base-branch", help="Base branch for diff"),
-    diff_scope: str | None = typer.Option(None, "--diff-scope", help="Diff scope: 'all' (committed+staged+unstaged) or 'committed' (committed only)"),
+    diff_scope: str | None = typer.Option(
+        None,
+        "--diff-scope",
+        help="Diff scope: 'all' (committed+staged+unstaged) or 'committed' (committed only)",
+    ),
     timeout: int | None = typer.Option(None, "--timeout", help="Timeout per model in seconds"),
     retries: int | None = typer.Option(None, "--retries", help="Number of retries per model"),
     verbose: bool = typer.Option(False, "--verbose", "-v", help="Show detailed output"),
@@ -68,7 +72,9 @@ def review(
             config_override.setdefault("git", {})["base_branch"] = base_branch
         if diff_scope is not None:
             if diff_scope not in ["all", "committed"]:
-                console.print(f"[red]Invalid diff scope '{diff_scope}'. Must be 'all' or 'committed'.[/red]")
+                console.print(
+                    f"[red]Invalid diff scope '{diff_scope}'. Must be 'all' or 'committed'.[/red]"
+                )
                 raise typer.Exit(1)
             config_override.setdefault("git", {})["diff_scope"] = diff_scope
         if timeout is not None:
@@ -99,7 +105,10 @@ def review(
 
         # Generate diff
         diff_content = generate_diff(
-            repo_path_obj, git_config["base_branch"], git_config["context_lines"], git_config["diff_scope"]
+            repo_path_obj,
+            git_config["base_branch"],
+            git_config["context_lines"],
+            git_config["diff_scope"],
         )
 
         if verbose:
@@ -164,16 +173,21 @@ def review(
         actual_output_dir = nllm_output_dir
         try:
             cli_args = nllm_results.manifest.cli_args
-            if '-o' in cli_args:
-                output_idx = cli_args.index('-o')
+            if "-o" in cli_args:
+                output_idx = cli_args.index("-o")
                 if output_idx + 1 < len(cli_args):
                     base_output_dir = cli_args[output_idx + 1]
                     base_path = Path(base_output_dir)
                     if base_path.exists():
-                        timestamped_dirs = [d for d in base_path.iterdir()
-                                          if d.is_dir() and d.name.replace('-', '').replace('_', '').isdigit()]
+                        timestamped_dirs = [
+                            d
+                            for d in base_path.iterdir()
+                            if d.is_dir() and d.name.replace("-", "").replace("_", "").isdigit()
+                        ]
                         if timestamped_dirs:
-                            actual_output_dir = max(timestamped_dirs, key=lambda d: d.stat().st_mtime)
+                            actual_output_dir = max(
+                                timestamped_dirs, key=lambda d: d.stat().st_mtime
+                            )
         except (AttributeError, ValueError, OSError):
             pass
 
@@ -306,7 +320,7 @@ def display_nllm_results(nllm_results, verbose: bool = False) -> None:
             # Extract summary from the parsed JSON response
             summary_output = None
 
-            if hasattr(result, 'json') and result.json is not None:
+            if hasattr(result, "json") and result.json is not None:
                 # Use nllm's parsed JSON
                 parsed_data = result.json
             else:
@@ -318,8 +332,8 @@ def display_nllm_results(nllm_results, verbose: bool = False) -> None:
 
             if parsed_data and isinstance(parsed_data, dict):
                 # Look for summary key in the response
-                if 'summary' in parsed_data:
-                    summary_output = json.dumps(parsed_data['summary'], indent=2)
+                if "summary" in parsed_data:
+                    summary_output = json.dumps(parsed_data["summary"], indent=2)
                 elif verbose:
                     # If verbose, show full response
                     summary_output = json.dumps(parsed_data, indent=2)
@@ -331,7 +345,9 @@ def display_nllm_results(nllm_results, verbose: bool = False) -> None:
                 # Fallback to raw text if not JSON
                 summary_output = result.text
                 if not verbose and len(summary_output) > 200:
-                    summary_output = summary_output[:200] + "\n... (truncated, use --verbose for full output)"
+                    summary_output = (
+                        summary_output[:200] + "\n... (truncated, use --verbose for full output)"
+                    )
 
             if summary_output:
                 console.print(Panel(summary_output, border_style="green"))
@@ -352,8 +368,6 @@ def display_nllm_results(nllm_results, verbose: bool = False) -> None:
 
                 if result.text:
                     console.print(f"[dim]Output: {result.text}[/dim]")
-
-
 
 
 def main() -> None:

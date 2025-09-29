@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Any
 
 from .config import get_models_config, load_config
-from .context import build_repo_context, get_context_summary, resolve_context_paths
+from .context import build_repo_context, resolve_context_paths
 from .errors import GitReviewerError
 from .git_integration import generate_diff, validate_and_prepare_repo
 from .nllm_runner import NLLMRunner
@@ -44,8 +44,6 @@ def review_repository(
     Raises:
         GitReviewerError: For various error conditions
     """
-    start_time = time.time()
-
     try:
         # Determine repository path
         if repo_path:
@@ -82,18 +80,19 @@ def review_repository(
 
         # Generate diff
         diff_content = generate_diff(
-            repo_path_obj, git_config["base_branch"], git_config["context_lines"], git_config["diff_scope"]
+            repo_path_obj,
+            git_config["base_branch"],
+            git_config["context_lines"],
+            git_config["diff_scope"],
         )
 
         # Process context files
         context_file_paths = []
         repo_context = ""
-        context_summary = None
 
         if context_files:
             context_file_paths = resolve_context_paths(context_files, repo_path_obj)
             repo_context = build_repo_context(context_file_paths, repo_path_obj)
-            context_summary = get_context_summary(context_file_paths)
 
         # Load and populate template
         template_path_obj = Path(config["paths"]["template"])

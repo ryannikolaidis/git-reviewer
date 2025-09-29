@@ -177,7 +177,13 @@ def create_default_config() -> dict[str, Any]:
         "models": [
             {
                 "name": "gpt-4.1",
-                "options": ["-o", "temperature", "0.7", "--system", "You are a helpful and concise assistant"],
+                "options": [
+                    "-o",
+                    "temperature",
+                    "0.7",
+                    "--system",
+                    "You are a helpful and concise assistant",
+                ],
             },
             {
                 "name": "claude-opus-4.1",

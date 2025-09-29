@@ -145,7 +145,9 @@ def check_uncommitted_changes(repo_path: Path) -> tuple[bool, str]:
         raise GitRepositoryError(f"Failed to check repository status: {e}")
 
 
-def generate_diff(repo_path: Path, base_branch: str, context_lines: int = 3, diff_scope: str = "all") -> str:
+def generate_diff(
+    repo_path: Path, base_branch: str, context_lines: int = 3, diff_scope: str = "all"
+) -> str:
     """Generate git diff from merge base with base branch.
 
     Args:
@@ -210,7 +212,7 @@ def generate_diff(repo_path: Path, base_branch: str, context_lines: int = 3, dif
                 cwd=repo_path,
                 text=True,
             )
-            untracked_files = [f.strip() for f in result.stdout.split('\n') if f.strip()]
+            untracked_files = [f.strip() for f in result.stdout.split("\n") if f.strip()]
             if untracked_files:
                 diff_sections.append("# === UNTRACKED FILES ===")
                 for file_path in untracked_files:
