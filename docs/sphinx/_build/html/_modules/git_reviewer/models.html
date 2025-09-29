@@ -1,0 +1,254 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>git_reviewer.models &mdash; git-reviewer 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            git-reviewer
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#from-source">From Source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#development-installation">Development Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#requirements">Requirements</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../usage.html#command-line">Command Line</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../usage.html#python-api">Python API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../api.html#module-git_reviewer">git_reviewer module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api.html#git_reviewer.review_repository"><code class="docutils literal notranslate"><span class="pre">review_repository()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api.html#git_reviewer.ReviewResult"><code class="docutils literal notranslate"><span class="pre">ReviewResult</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api.html#git_reviewer.ReviewResult.__init__"><code class="docutils literal notranslate"><span class="pre">ReviewResult.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api.html#git_reviewer.ReviewResult.get_failed_models"><code class="docutils literal notranslate"><span class="pre">ReviewResult.get_failed_models()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api.html#git_reviewer.ReviewResult.get_successful_reviews"><code class="docutils literal notranslate"><span class="pre">ReviewResult.get_successful_reviews()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api.html#git_reviewer.ReviewResult.get_summary"><code class="docutils literal notranslate"><span class="pre">ReviewResult.get_summary()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api.html#git_reviewer.ReviewResult.has_any_success"><code class="docutils literal notranslate"><span class="pre">ReviewResult.has_any_success()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api.html#git_reviewer.ReviewResult.success"><code class="docutils literal notranslate"><span class="pre">ReviewResult.success</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api.html#git_reviewer.ReviewResult.results"><code class="docutils literal notranslate"><span class="pre">ReviewResult.results</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api.html#git_reviewer.ReviewResult.errors"><code class="docutils literal notranslate"><span class="pre">ReviewResult.errors</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api.html#git_reviewer.ReviewResult.metadata"><code class="docutils literal notranslate"><span class="pre">ReviewResult.metadata</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api.html#module-git_reviewer.cli">git_reviewer.cli module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api.html#git_reviewer.cli.review"><code class="docutils literal notranslate"><span class="pre">review()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api.html#git_reviewer.cli.init_config"><code class="docutils literal notranslate"><span class="pre">init_config()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api.html#git_reviewer.cli.check"><code class="docutils literal notranslate"><span class="pre">check()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api.html#git_reviewer.cli.display_results"><code class="docutils literal notranslate"><span class="pre">display_results()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api.html#git_reviewer.cli.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api.html#module-git_reviewer.app">git_reviewer.app module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api.html#git_reviewer.app.get_application_info"><code class="docutils literal notranslate"><span class="pre">get_application_info()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">git-reviewer</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">git_reviewer.models</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for git_reviewer.models</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Data models and result structures for git-reviewer.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+
+
+<div class="viewcode-block" id="ReviewResult">
+<a class="viewcode-back" href="../../api.html#git_reviewer.ReviewResult">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ReviewResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Result from a git-reviewer execution.&quot;&quot;&quot;</span>
+
+    <span class="n">success</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="n">results</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>  <span class="c1"># nllm output per model</span>
+    <span class="n">errors</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>  <span class="c1"># Error messages per failed model</span>
+    <span class="n">metadata</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>  <span class="c1"># Git info, timing, config used</span>
+
+<div class="viewcode-block" id="ReviewResult.get_successful_reviews">
+<a class="viewcode-back" href="../../api.html#git_reviewer.ReviewResult.get_successful_reviews">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_successful_reviews</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return only successful model results.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="n">name</span><span class="p">:</span> <span class="n">result</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;success&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="ReviewResult.get_failed_models">
+<a class="viewcode-back" href="../../api.html#git_reviewer.ReviewResult.get_failed_models">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_failed_models</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return list of models that failed.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="ReviewResult.has_any_success">
+<a class="viewcode-back" href="../../api.html#git_reviewer.ReviewResult.has_any_success">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">has_any_success</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if at least one model succeeded.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_successful_reviews</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">0</span></div>
+
+
+<div class="viewcode-block" id="ReviewResult.get_summary">
+<a class="viewcode-back" href="../../api.html#git_reviewer.ReviewResult.get_summary">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get summary statistics of the review.&quot;&quot;&quot;</span>
+        <span class="n">successful</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_successful_reviews</span><span class="p">()</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;total_models&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="p">),</span>
+            <span class="s2">&quot;successful_models&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">successful</span><span class="p">),</span>
+            <span class="s2">&quot;failed_models&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="p">),</span>
+            <span class="s2">&quot;success_rate&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">successful</span><span class="p">)</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="p">)),</span>
+            <span class="s2">&quot;has_results&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">successful</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="p">}</span></div>
+</div>
+
+
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">GitInfo</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Git repository information.&quot;&quot;&quot;</span>
+
+    <span class="n">current_branch</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">base_branch</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">merge_base</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">head_commit</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">commit_range</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">stats</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>  <span class="c1"># files, insertions, deletions</span>
+    <span class="n">diff_stats</span><span class="p">:</span> <span class="nb">str</span>
+
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ContextSummary</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Summary of context files processed.&quot;&quot;&quot;</span>
+
+    <span class="n">total_files</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">total_size_mb</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">readable_files</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">binary_files</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">missing_files</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">error_files</span><span class="p">:</span> <span class="nb">int</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">has_issues</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if there were any issues with context files.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">missing_files</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">error_files</span> <span class="o">&gt;</span> <span class="mi">0</span>
+
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ReviewConfig</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Configuration for a review run.&quot;&quot;&quot;</span>
+
+    <span class="n">repo_path</span><span class="p">:</span> <span class="n">Path</span>
+    <span class="n">models</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">context_files</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span>
+    <span class="n">base_branch</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">context_lines</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">template_path</span><span class="p">:</span> <span class="n">Path</span>
+    <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">parallel</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert to dictionary for serialization.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;repo_path&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">repo_path</span><span class="p">),</span>
+            <span class="s2">&quot;models&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">models</span><span class="p">,</span>
+            <span class="s2">&quot;context_files&quot;</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">context_files</span><span class="p">],</span>
+            <span class="s2">&quot;output_dir&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s2">&quot;base_branch&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_branch</span><span class="p">,</span>
+            <span class="s2">&quot;context_lines&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">context_lines</span><span class="p">,</span>
+            <span class="s2">&quot;parallel&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">parallel</span><span class="p">,</span>
+            <span class="s2">&quot;template_path&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">template_path</span><span class="p">),</span>
+        <span class="p">}</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Ryan Nikolaidis.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

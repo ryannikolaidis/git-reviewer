@@ -1,0 +1,458 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>git_reviewer.api &mdash; git-reviewer 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            git-reviewer
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#from-source">From Source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#development-installation">Development Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#requirements">Requirements</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../usage.html#command-line">Command Line</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../usage.html#python-api">Python API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../api.html#module-git_reviewer">git_reviewer module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api.html#git_reviewer.review_repository"><code class="docutils literal notranslate"><span class="pre">review_repository()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api.html#git_reviewer.ReviewResult"><code class="docutils literal notranslate"><span class="pre">ReviewResult</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api.html#git_reviewer.ReviewResult.__init__"><code class="docutils literal notranslate"><span class="pre">ReviewResult.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api.html#git_reviewer.ReviewResult.get_failed_models"><code class="docutils literal notranslate"><span class="pre">ReviewResult.get_failed_models()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api.html#git_reviewer.ReviewResult.get_successful_reviews"><code class="docutils literal notranslate"><span class="pre">ReviewResult.get_successful_reviews()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api.html#git_reviewer.ReviewResult.get_summary"><code class="docutils literal notranslate"><span class="pre">ReviewResult.get_summary()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api.html#git_reviewer.ReviewResult.has_any_success"><code class="docutils literal notranslate"><span class="pre">ReviewResult.has_any_success()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api.html#git_reviewer.ReviewResult.success"><code class="docutils literal notranslate"><span class="pre">ReviewResult.success</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api.html#git_reviewer.ReviewResult.results"><code class="docutils literal notranslate"><span class="pre">ReviewResult.results</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api.html#git_reviewer.ReviewResult.errors"><code class="docutils literal notranslate"><span class="pre">ReviewResult.errors</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api.html#git_reviewer.ReviewResult.metadata"><code class="docutils literal notranslate"><span class="pre">ReviewResult.metadata</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api.html#module-git_reviewer.cli">git_reviewer.cli module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api.html#git_reviewer.cli.review"><code class="docutils literal notranslate"><span class="pre">review()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api.html#git_reviewer.cli.init_config"><code class="docutils literal notranslate"><span class="pre">init_config()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api.html#git_reviewer.cli.check"><code class="docutils literal notranslate"><span class="pre">check()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api.html#git_reviewer.cli.display_results"><code class="docutils literal notranslate"><span class="pre">display_results()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api.html#git_reviewer.cli.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api.html#module-git_reviewer.app">git_reviewer.app module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api.html#git_reviewer.app.get_application_info"><code class="docutils literal notranslate"><span class="pre">get_application_info()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">git-reviewer</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">git_reviewer.api</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for git_reviewer.api</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Python API for git-reviewer.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_models_config</span><span class="p">,</span> <span class="n">load_config</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.context</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_repo_context</span><span class="p">,</span> <span class="n">get_context_summary</span><span class="p">,</span> <span class="n">resolve_context_paths</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">GitReviewerError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.git_integration</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_diff</span><span class="p">,</span> <span class="n">validate_and_prepare_repo</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReviewConfig</span><span class="p">,</span> <span class="n">ReviewResult</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.nllm_runner</span><span class="w"> </span><span class="kn">import</span> <span class="n">NLLMRunner</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.template</span><span class="w"> </span><span class="kn">import</span> <span class="n">format_prompt_for_nllm</span><span class="p">,</span> <span class="n">populate_template</span>
+
+
+<div class="viewcode-block" id="review_repository">
+<a class="viewcode-back" href="../../api.html#git_reviewer.review_repository">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">review_repository</span><span class="p">(</span>
+    <span class="n">repo_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">models</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">context_files</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">output_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">base_branch</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">context_lines</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">retries</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">config_override</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">template_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ReviewResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Review git repository changes using AI models.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        repo_path: Path to git repository (default: current directory)</span>
+<span class="sd">        models: List of model names to use (default: all configured models)</span>
+<span class="sd">        context_files: List of context file paths to include</span>
+<span class="sd">        output_dir: Directory for review outputs</span>
+<span class="sd">        base_branch: Base branch for diff (default: from config)</span>
+<span class="sd">        context_lines: Number of context lines in git diff</span>
+<span class="sd">        timeout: Timeout per model in seconds</span>
+<span class="sd">        retries: Number of retries per model</span>
+<span class="sd">        config_override: Dictionary to override configuration values</span>
+<span class="sd">        template_path: Path to custom template file</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ReviewResult object with results, errors, and metadata</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        GitReviewerError: For various error conditions</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Determine repository path</span>
+        <span class="k">if</span> <span class="n">repo_path</span><span class="p">:</span>
+            <span class="n">repo_path_obj</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">repo_path</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">repo_path_obj</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span>
+
+        <span class="c1"># Build configuration override</span>
+        <span class="n">override</span> <span class="o">=</span> <span class="n">config_override</span> <span class="ow">or</span> <span class="p">{}</span>
+
+        <span class="k">if</span> <span class="n">context_lines</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">override</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;git&quot;</span><span class="p">,</span> <span class="p">{})[</span><span class="s2">&quot;context_lines&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">context_lines</span>
+        <span class="k">if</span> <span class="n">base_branch</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">override</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;git&quot;</span><span class="p">,</span> <span class="p">{})[</span><span class="s2">&quot;base_branch&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">base_branch</span>
+        <span class="k">if</span> <span class="n">timeout</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">override</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;defaults&quot;</span><span class="p">,</span> <span class="p">{})[</span><span class="s2">&quot;timeout&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">timeout</span>
+        <span class="k">if</span> <span class="n">retries</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">override</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;defaults&quot;</span><span class="p">,</span> <span class="p">{})[</span><span class="s2">&quot;retries&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">retries</span>
+
+        <span class="k">if</span> <span class="n">template_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">override</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;paths&quot;</span><span class="p">,</span> <span class="p">{})[</span><span class="s2">&quot;template&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">template_path</span>
+
+        <span class="c1"># Load configuration</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">load_config</span><span class="p">(</span><span class="n">cwd</span><span class="o">=</span><span class="n">repo_path_obj</span><span class="p">,</span> <span class="n">config_override</span><span class="o">=</span><span class="n">override</span><span class="p">)</span>
+
+        <span class="c1"># Get model configurations</span>
+        <span class="n">model_configs</span> <span class="o">=</span> <span class="n">get_models_config</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">models</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">model_configs</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">GitReviewerError</span><span class="p">(</span><span class="s2">&quot;No models configured. Please check your configuration.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Validate and prepare repository</span>
+        <span class="n">git_config</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;git&quot;</span><span class="p">]</span>
+        <span class="n">git_info</span><span class="p">,</span> <span class="n">warning</span> <span class="o">=</span> <span class="n">validate_and_prepare_repo</span><span class="p">(</span><span class="n">repo_path_obj</span><span class="p">,</span> <span class="n">git_config</span><span class="p">[</span><span class="s2">&quot;base_branch&quot;</span><span class="p">])</span>
+
+        <span class="c1"># Generate diff</span>
+        <span class="n">diff_content</span> <span class="o">=</span> <span class="n">generate_diff</span><span class="p">(</span>
+            <span class="n">repo_path_obj</span><span class="p">,</span> <span class="n">git_config</span><span class="p">[</span><span class="s2">&quot;base_branch&quot;</span><span class="p">],</span> <span class="n">git_config</span><span class="p">[</span><span class="s2">&quot;context_lines&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Process context files</span>
+        <span class="n">context_file_paths</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">repo_context</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">context_summary</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">context_files</span><span class="p">:</span>
+            <span class="n">context_file_paths</span> <span class="o">=</span> <span class="n">resolve_context_paths</span><span class="p">(</span><span class="n">context_files</span><span class="p">,</span> <span class="n">repo_path_obj</span><span class="p">)</span>
+            <span class="n">repo_context</span> <span class="o">=</span> <span class="n">build_repo_context</span><span class="p">(</span><span class="n">context_file_paths</span><span class="p">,</span> <span class="n">repo_path_obj</span><span class="p">)</span>
+            <span class="n">context_summary</span> <span class="o">=</span> <span class="n">get_context_summary</span><span class="p">(</span><span class="n">context_file_paths</span><span class="p">)</span>
+
+        <span class="c1"># Load and populate template</span>
+        <span class="n">template_path_obj</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;paths&quot;</span><span class="p">][</span><span class="s2">&quot;template&quot;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">template_path_obj</span><span class="o">.</span><span class="n">is_absolute</span><span class="p">():</span>
+            <span class="c1"># Try relative to package</span>
+            <span class="kn">import</span><span class="w"> </span><span class="nn">git_reviewer</span>
+
+            <span class="n">package_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">git_reviewer</span><span class="o">.</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span>
+            <span class="n">template_path_obj</span> <span class="o">=</span> <span class="n">package_dir</span> <span class="o">/</span> <span class="n">template_path_obj</span>
+
+        <span class="n">populated_template</span> <span class="o">=</span> <span class="n">populate_template</span><span class="p">(</span><span class="n">template_path_obj</span><span class="p">,</span> <span class="n">repo_context</span><span class="p">,</span> <span class="n">diff_content</span><span class="p">)</span>
+        <span class="n">prompt</span> <span class="o">=</span> <span class="n">format_prompt_for_nllm</span><span class="p">(</span><span class="n">populated_template</span><span class="p">)</span>
+
+        <span class="c1"># Check nllm availability</span>
+        <span class="n">runner</span> <span class="o">=</span> <span class="n">NLLMRunner</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+        <span class="n">nllm_available</span><span class="p">,</span> <span class="n">nllm_info</span> <span class="o">=</span> <span class="n">runner</span><span class="o">.</span><span class="n">check_nllm_available</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">nllm_available</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">GitReviewerError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;nllm not available: </span><span class="si">{</span><span class="n">nllm_info</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Execute review (always in parallel)</span>
+        <span class="k">if</span> <span class="n">output_dir</span><span class="p">:</span>
+            <span class="n">nllm_output_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Check config for output directory (nllm-style), fallback to repo directory</span>
+            <span class="n">config_output_dir</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;defaults&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;outdir&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">config_output_dir</span><span class="p">:</span>
+                <span class="n">nllm_output_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">config_output_dir</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">nllm_output_dir</span> <span class="o">=</span> <span class="n">repo_path_obj</span> <span class="o">/</span> <span class="s2">&quot;git-reviewer-results&quot;</span>
+
+        <span class="n">execution_result</span> <span class="o">=</span> <span class="n">runner</span><span class="o">.</span><span class="n">run_review</span><span class="p">(</span><span class="n">model_configs</span><span class="p">,</span> <span class="n">prompt</span><span class="p">,</span> <span class="n">nllm_output_dir</span><span class="p">,</span> <span class="n">parallel</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># Build metadata</span>
+        <span class="n">end_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">execution_time</span> <span class="o">=</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span>
+
+        <span class="c1"># Get actual output directory from nllm</span>
+        <span class="n">actual_output_dir</span> <span class="o">=</span> <span class="n">execution_result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;output_dir&quot;</span><span class="p">,</span> <span class="n">nllm_output_dir</span><span class="p">)</span>
+
+        <span class="n">review_config</span> <span class="o">=</span> <span class="n">ReviewConfig</span><span class="p">(</span>
+            <span class="n">repo_path</span><span class="o">=</span><span class="n">repo_path_obj</span><span class="p">,</span>
+            <span class="n">models</span><span class="o">=</span><span class="p">[</span><span class="n">m</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">model_configs</span><span class="p">],</span>
+            <span class="n">context_files</span><span class="o">=</span><span class="n">context_file_paths</span><span class="p">,</span>
+            <span class="n">base_branch</span><span class="o">=</span><span class="n">git_config</span><span class="p">[</span><span class="s2">&quot;base_branch&quot;</span><span class="p">],</span>
+            <span class="n">context_lines</span><span class="o">=</span><span class="n">git_config</span><span class="p">[</span><span class="s2">&quot;context_lines&quot;</span><span class="p">],</span>
+            <span class="n">template_path</span><span class="o">=</span><span class="n">template_path_obj</span><span class="p">,</span>
+            <span class="n">output_dir</span><span class="o">=</span><span class="n">actual_output_dir</span><span class="p">,</span>
+            <span class="n">parallel</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;git_info&quot;</span><span class="p">:</span> <span class="n">git_info</span><span class="p">,</span>
+            <span class="s2">&quot;context_summary&quot;</span><span class="p">:</span> <span class="n">context_summary</span><span class="p">,</span>
+            <span class="s2">&quot;review_config&quot;</span><span class="p">:</span> <span class="n">review_config</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span>
+            <span class="s2">&quot;execution_time&quot;</span><span class="p">:</span> <span class="n">execution_time</span><span class="p">,</span>
+            <span class="s2">&quot;nllm_info&quot;</span><span class="p">:</span> <span class="n">nllm_info</span><span class="p">,</span>
+            <span class="s2">&quot;warning&quot;</span><span class="p">:</span> <span class="n">warning</span><span class="p">,</span>
+            <span class="s2">&quot;prompt_length&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">prompt</span><span class="p">),</span>
+        <span class="p">}</span>
+
+        <span class="c1"># Create result</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">ReviewResult</span><span class="p">(</span>
+            <span class="n">success</span><span class="o">=</span><span class="n">execution_result</span><span class="p">[</span><span class="s2">&quot;success_count&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="n">results</span><span class="o">=</span><span class="n">execution_result</span><span class="p">[</span><span class="s2">&quot;results&quot;</span><span class="p">],</span>
+            <span class="n">errors</span><span class="o">=</span><span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">info</span><span class="p">[</span><span class="s2">&quot;error&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">execution_result</span><span class="p">[</span><span class="s2">&quot;errors&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()},</span>
+            <span class="n">metadata</span><span class="o">=</span><span class="n">metadata</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">GitReviewerError</span><span class="p">):</span>
+            <span class="k">raise</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">GitReviewerError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unexpected error during review: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">check_configuration</span><span class="p">(</span><span class="n">repo_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Check git-reviewer configuration and dependencies.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        repo_path: Path to git repository (default: current directory)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Dictionary with configuration status information</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">repo_path</span><span class="p">:</span>
+        <span class="n">repo_path_obj</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">repo_path</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">repo_path_obj</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span>
+
+    <span class="n">status</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;config_valid&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;config_error&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s2">&quot;models_count&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;nllm_available&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;nllm_info&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s2">&quot;git_repo_valid&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;git_error&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Check configuration</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">load_config</span><span class="p">(</span><span class="n">cwd</span><span class="o">=</span><span class="n">repo_path_obj</span><span class="p">)</span>
+        <span class="n">status</span><span class="p">[</span><span class="s2">&quot;config_valid&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">status</span><span class="p">[</span><span class="s2">&quot;models_count&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;models&quot;</span><span class="p">,</span> <span class="p">[]))</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">status</span><span class="p">[</span><span class="s2">&quot;config_error&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+
+    <span class="c1"># Check nllm if config is valid</span>
+    <span class="k">if</span> <span class="n">status</span><span class="p">[</span><span class="s2">&quot;config_valid&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">runner</span> <span class="o">=</span> <span class="n">NLLMRunner</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+            <span class="n">nllm_available</span><span class="p">,</span> <span class="n">nllm_info</span> <span class="o">=</span> <span class="n">runner</span><span class="o">.</span><span class="n">check_nllm_available</span><span class="p">()</span>
+            <span class="n">status</span><span class="p">[</span><span class="s2">&quot;nllm_available&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nllm_available</span>
+            <span class="n">status</span><span class="p">[</span><span class="s2">&quot;nllm_info&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nllm_info</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">status</span><span class="p">[</span><span class="s2">&quot;nllm_info&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Error checking nllm: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="c1"># Check git repository</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">.git_integration</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate_git_repo</span>
+
+        <span class="n">validate_git_repo</span><span class="p">(</span><span class="n">repo_path_obj</span><span class="p">)</span>
+        <span class="n">status</span><span class="p">[</span><span class="s2">&quot;git_repo_valid&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">status</span><span class="p">[</span><span class="s2">&quot;git_error&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">status</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_config_info</span><span class="p">(</span><span class="n">repo_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get detailed configuration information.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        repo_path: Path to git repository (default: current directory)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Dictionary with configuration details</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">repo_path</span><span class="p">:</span>
+        <span class="n">repo_path_obj</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">repo_path</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">repo_path_obj</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">load_config</span><span class="p">(</span><span class="n">cwd</span><span class="o">=</span><span class="n">repo_path_obj</span><span class="p">)</span>
+
+        <span class="kn">from</span><span class="w"> </span><span class="nn">.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_global_config_path</span><span class="p">,</span> <span class="n">get_local_config_path</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;global_config_path&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">get_global_config_path</span><span class="p">()),</span>
+            <span class="s2">&quot;local_config_path&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">get_local_config_path</span><span class="p">(</span><span class="n">repo_path_obj</span><span class="p">)),</span>
+            <span class="s2">&quot;global_config_exists&quot;</span><span class="p">:</span> <span class="n">get_global_config_path</span><span class="p">()</span><span class="o">.</span><span class="n">exists</span><span class="p">(),</span>
+            <span class="s2">&quot;local_config_exists&quot;</span><span class="p">:</span> <span class="n">get_local_config_path</span><span class="p">(</span><span class="n">repo_path_obj</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">(),</span>
+            <span class="s2">&quot;merged_config&quot;</span><span class="p">:</span> <span class="n">config</span><span class="p">,</span>
+            <span class="s2">&quot;models&quot;</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;models&quot;</span><span class="p">,</span> <span class="p">[]),</span>
+            <span class="s2">&quot;defaults&quot;</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;defaults&quot;</span><span class="p">,</span> <span class="p">{}),</span>
+            <span class="s2">&quot;git_settings&quot;</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;git&quot;</span><span class="p">,</span> <span class="p">{}),</span>
+            <span class="s2">&quot;paths&quot;</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;paths&quot;</span><span class="p">,</span> <span class="p">{}),</span>
+        <span class="p">}</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">create_config</span><span class="p">(</span>
+    <span class="n">global_config</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">local_config</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">repo_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create default configuration files.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        global_config: Whether to create global configuration</span>
+<span class="sd">        local_config: Whether to create local configuration</span>
+<span class="sd">        repo_path: Path to git repository for local config (default: current directory)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Dictionary with paths of created configuration files</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">created_files</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">if</span> <span class="n">repo_path</span><span class="p">:</span>
+        <span class="n">repo_path_obj</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">repo_path</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">repo_path_obj</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span>
+
+    <span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
+
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_default_config</span><span class="p">,</span> <span class="n">get_global_config_path</span><span class="p">,</span> <span class="n">get_local_config_path</span>
+
+    <span class="k">if</span> <span class="n">global_config</span><span class="p">:</span>
+        <span class="n">global_path</span> <span class="o">=</span> <span class="n">get_global_config_path</span><span class="p">()</span>
+        <span class="n">global_path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">default_config</span> <span class="o">=</span> <span class="n">create_default_config</span><span class="p">()</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">global_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">default_config</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">default_flow_style</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="n">created_files</span><span class="p">[</span><span class="s2">&quot;global&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">global_path</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">local_config</span><span class="p">:</span>
+        <span class="n">local_path</span> <span class="o">=</span> <span class="n">get_local_config_path</span><span class="p">(</span><span class="n">repo_path_obj</span><span class="p">)</span>
+
+        <span class="c1"># Create a minimal local config</span>
+        <span class="n">local_config_data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;models&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;gpt-4&quot;</span><span class="p">,</span> <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;-o&quot;</span><span class="p">,</span> <span class="s2">&quot;temperature&quot;</span><span class="p">,</span> <span class="s2">&quot;0.1&quot;</span><span class="p">]}]}</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">local_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">local_config_data</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">default_flow_style</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="n">created_files</span><span class="p">[</span><span class="s2">&quot;local&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">local_path</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">created_files</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Ryan Nikolaidis.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
