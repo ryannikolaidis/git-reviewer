@@ -32,7 +32,7 @@ class NLLMRunner:
         prompt: str,
         output_dir: Path | None = None,
         parallel: bool | None = None,
-    ) -> dict[str, Any]:
+    ):
         """Execute review using nllm Python API."""
         if not models:
             raise NLLMError("No models configured for review")
@@ -64,7 +64,7 @@ class NLLMRunner:
                 # No output dir specified - let nllm create its own
                 nllm_outdir = None
 
-            results = nllm.run(
+            return nllm.run(
                 cli_models=cli_models,
                 cli_model_options=cli_model_options,
                 outdir=nllm_outdir,
@@ -75,82 +75,6 @@ class NLLMRunner:
                 quiet=True,    # Reduce console output
                 llm_args=[prompt],
             )
-
-            # Convert nllm results to our format
-            our_results = {}
-            our_errors = {}
-
-            for result in results.results:
-                if result.status == "ok":
-                    # Success - parse output
-                    output_data = {
-                        "model": result.model,
-                        "success": True,
-                        "output": result.text,
-                        "error": None,
-                        "duration_ms": result.duration_ms,
-                        "command": " ".join(result.command),
-                    }
-
-                    # Use nllm's parsed JSON if available, fallback to manual parsing
-                    if hasattr(result, 'json') and result.json is not None:
-                        output_data["parsed_output"] = result.json
-                    else:
-                        # Fallback: try to parse as JSON manually
-                        try:
-                            parsed_output = json.loads(result.text)
-                            output_data["parsed_output"] = parsed_output
-                        except json.JSONDecodeError:
-                            # Not JSON, keep as string
-                            pass
-
-                    our_results[result.model] = output_data
-                else:
-                    # Error or timeout
-                    error_data = {
-                        "model": result.model,
-                        "success": False,
-                        "output": result.text,
-                        "error": result.stderr_tail or f"Model {result.status}: exit code {result.exit_code}",
-                        "return_code": result.exit_code,
-                        "duration_ms": result.duration_ms,
-                        "command": " ".join(result.command),
-                    }
-                    our_errors[result.model] = error_data
-
-            # Extract actual output directory from nllm results
-            actual_output_dir = None
-            try:
-                # Get from CLI args - look for -o flag to get base dir
-                cli_args = results.manifest.cli_args
-                if '-o' in cli_args:
-                    output_idx = cli_args.index('-o')
-                    if output_idx + 1 < len(cli_args):
-                        base_output_dir = cli_args[output_idx + 1]
-                        # nllm creates a timestamped directory inside the base
-                        # Find the timestamped directory (most recent one)
-                        from pathlib import Path
-                        base_path = Path(base_output_dir)
-                        if base_path.exists():
-                            timestamped_dirs = [d for d in base_path.iterdir()
-                                              if d.is_dir() and d.name.replace('-', '').replace('_', '').isdigit()]
-                            if timestamped_dirs:
-                                actual_output_dir = str(max(timestamped_dirs, key=lambda d: d.stat().st_mtime))
-                            else:
-                                actual_output_dir = base_output_dir
-                        else:
-                            actual_output_dir = base_output_dir
-            except (AttributeError, ValueError, OSError):
-                pass
-
-            return {
-                "results": our_results,
-                "errors": our_errors,
-                "success_count": len(our_results),
-                "error_count": len(our_errors),
-                "total_models": len(models),
-                "output_dir": actual_output_dir,
-            }
 
         except Exception as e:
             raise NLLMError(f"Failed to execute nllm review: {e}")

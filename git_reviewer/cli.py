@@ -44,6 +44,7 @@ def review(
         None, "--context-lines", help="Number of context lines in git diff"
     ),
     base_branch: str | None = typer.Option(None, "--base-branch", help="Base branch for diff"),
+    diff_scope: str | None = typer.Option(None, "--diff-scope", help="Diff scope: 'all' (committed+staged+unstaged) or 'committed' (committed only)"),
     timeout: int | None = typer.Option(None, "--timeout", help="Timeout per model in seconds"),
     retries: int | None = typer.Option(None, "--retries", help="Number of retries per model"),
     verbose: bool = typer.Option(False, "--verbose", "-v", help="Show detailed output"),
@@ -65,6 +66,11 @@ def review(
             config_override.setdefault("git", {})["context_lines"] = context_lines
         if base_branch is not None:
             config_override.setdefault("git", {})["base_branch"] = base_branch
+        if diff_scope is not None:
+            if diff_scope not in ["all", "committed"]:
+                console.print(f"[red]Invalid diff scope '{diff_scope}'. Must be 'all' or 'committed'.[/red]")
+                raise typer.Exit(1)
+            config_override.setdefault("git", {})["diff_scope"] = diff_scope
         if timeout is not None:
             config_override.setdefault("defaults", {})["timeout"] = timeout
         if retries is not None:
@@ -93,7 +99,7 @@ def review(
 
         # Generate diff
         diff_content = generate_diff(
-            repo_path_obj, git_config["base_branch"], git_config["context_lines"]
+            repo_path_obj, git_config["base_branch"], git_config["context_lines"], git_config["diff_scope"]
         )
 
         if verbose:
@@ -149,23 +155,40 @@ def review(
         console.print(f"[blue]Running review with {len(model_configs)} models...[/blue]")
 
         # Execute review (always in parallel)
-        execution_result = runner.run_review(model_configs, prompt, nllm_output_dir, parallel=True)
+        nllm_results = runner.run_review(model_configs, prompt, nllm_output_dir, parallel=True)
 
         # Display results
-        display_results(execution_result, verbose)
+        display_nllm_results(nllm_results, verbose)
 
         # Show where results are actually saved (from nllm)
-        actual_output_dir = execution_result.get("output_dir", nllm_output_dir)
+        actual_output_dir = nllm_output_dir
+        try:
+            cli_args = nllm_results.manifest.cli_args
+            if '-o' in cli_args:
+                output_idx = cli_args.index('-o')
+                if output_idx + 1 < len(cli_args):
+                    base_output_dir = cli_args[output_idx + 1]
+                    base_path = Path(base_output_dir)
+                    if base_path.exists():
+                        timestamped_dirs = [d for d in base_path.iterdir()
+                                          if d.is_dir() and d.name.replace('-', '').replace('_', '').isdigit()]
+                        if timestamped_dirs:
+                            actual_output_dir = max(timestamped_dirs, key=lambda d: d.stat().st_mtime)
+        except (AttributeError, ValueError, OSError):
+            pass
+
         console.print(f"\n[cyan]📁 Full results saved to: [bold]{actual_output_dir}[/bold][/cyan]")
 
+        # Count successes and failures
+        successes = len([r for r in nllm_results.results if r.status == "ok"])
+        failures = len([r for r in nllm_results.results if r.status != "ok"])
+
         # Exit with appropriate code
-        if execution_result["success_count"] == 0:
+        if successes == 0:
             console.print("[red]All models failed. See errors above.[/red]")
             raise typer.Exit(1)
-        elif execution_result["error_count"] > 0:
-            console.print(
-                f"[yellow]Completed with {execution_result['error_count']} model failures.[/yellow]"
-            )
+        elif failures > 0:
+            console.print(f"[yellow]Completed with {failures} model failures.[/yellow]")
             raise typer.Exit(2)
         else:
             console.print("[green]Review completed successfully![/green]")
@@ -267,28 +290,27 @@ def check() -> None:
     console.print("\n[green]git-reviewer is ready to use![/green]")
 
 
-def display_results(execution_result: dict, verbose: bool = False) -> None:
-    """Display review execution results."""
+def display_nllm_results(nllm_results, verbose: bool = False) -> None:
+    """Display nllm results directly."""
+    import json
 
-    results = execution_result["results"]
-    errors = execution_result["errors"]
+    successes = [r for r in nllm_results.results if r.status == "ok"]
+    failures = [r for r in nllm_results.results if r.status != "ok"]
 
-    if results:
-        console.print(f"\n[green]✓ {len(results)} models completed successfully:[/green]")
+    if successes:
+        console.print(f"\n[green]✓ {len(successes)} models completed successfully:[/green]")
 
-        for model_name, result in results.items():
-            console.print(f"\n[bold cyan]{model_name}:[/bold cyan]")
+        for result in successes:
+            console.print(f"\n[bold cyan]{result.model}:[/bold cyan]")
 
             # Prefer parsed JSON from nllm if available, fallback to raw output
-            if "parsed_output" in result:
+            if hasattr(result, 'json') and result.json is not None:
                 # nllm already parsed the JSON
-                import json
-                output = json.dumps(result["parsed_output"], indent=2)
+                output = json.dumps(result.json, indent=2)
             else:
-                output = result.get("output", "")
+                output = result.text
                 if output:
                     # Try to pretty-print JSON manually
-                    import json
                     try:
                         parsed = json.loads(output)
                         output = json.dumps(parsed, indent=2)
@@ -304,20 +326,22 @@ def display_results(execution_result: dict, verbose: bool = False) -> None:
             else:
                 console.print("[dim]No output[/dim]")
 
-    if errors:
-        console.print(f"\n[red]✗ {len(errors)} models failed:[/red]")
+    if failures:
+        console.print(f"\n[red]✗ {len(failures)} models failed:[/red]")
 
-        for model_name, error_info in errors.items():
-            console.print(f"\n[bold red]{model_name}:[/bold red]")
-            error_msg = error_info.get("error", "Unknown error")
+        for result in failures:
+            console.print(f"\n[bold red]{result.model}:[/bold red]")
+            error_msg = result.stderr_tail or f"Model {result.status}: exit code {result.exit_code}"
             console.print(f"[red]{error_msg}[/red]")
 
             if verbose:
-                cmd = error_info.get("command", "unknown")
+                cmd = " ".join(result.command)
                 console.print(f"[dim]Command: {cmd}[/dim]")
 
-                if error_info.get("output"):
-                    console.print(f"[dim]Output: {error_info['output']}[/dim]")
+                if result.text:
+                    console.print(f"[dim]Output: {result.text}[/dim]")
+
+
 
 
 def main() -> None:

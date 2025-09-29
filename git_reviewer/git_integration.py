@@ -145,13 +145,22 @@ def check_uncommitted_changes(repo_path: Path) -> tuple[bool, str]:
         raise GitRepositoryError(f"Failed to check repository status: {e}")
 
 
-def generate_diff(repo_path: Path, base_branch: str, context_lines: int = 3) -> str:
-    """Generate git diff from merge base with base branch."""
+def generate_diff(repo_path: Path, base_branch: str, context_lines: int = 3, diff_scope: str = "all") -> str:
+    """Generate git diff from merge base with base branch.
+
+    Args:
+        repo_path: Path to the git repository
+        base_branch: Base branch for comparison
+        context_lines: Number of context lines in diff
+        diff_scope: Scope of changes to include - "all" (committed+staged+unstaged) or "committed" (committed only)
+    """
     # Find merge base
     merge_base = get_merge_base(repo_path, base_branch)
 
-    # Generate diff with specified context lines
+    diff_sections = []
+
     try:
+        # Always include committed changes
         result = subprocess.run(
             ["git", "diff", f"--unified={context_lines}", f"{merge_base}..HEAD"],
             capture_output=True,
@@ -159,15 +168,75 @@ def generate_diff(repo_path: Path, base_branch: str, context_lines: int = 3) -> 
             cwd=repo_path,
             text=True,
         )
-        diff_output = result.stdout
+        committed_diff = result.stdout.strip()
+        if committed_diff:
+            if diff_scope == "all":
+                diff_sections.append("# === COMMITTED CHANGES ===")
+            diff_sections.append(committed_diff)
 
-        if not diff_output.strip():
+        # Include staged and unstaged changes only if scope is "all"
+        if diff_scope == "all":
+            # 2. Staged changes (--cached HEAD)
+            result = subprocess.run(
+                ["git", "diff", f"--unified={context_lines}", "--cached", "HEAD"],
+                capture_output=True,
+                check=True,
+                cwd=repo_path,
+                text=True,
+            )
+            staged_diff = result.stdout.strip()
+            if staged_diff:
+                diff_sections.append("# === STAGED CHANGES ===")
+                diff_sections.append(staged_diff)
+
+            # 3. Unstaged changes (working directory vs HEAD)
+            result = subprocess.run(
+                ["git", "diff", f"--unified={context_lines}", "HEAD"],
+                capture_output=True,
+                check=True,
+                cwd=repo_path,
+                text=True,
+            )
+            unstaged_diff = result.stdout.strip()
+            if unstaged_diff:
+                diff_sections.append("# === UNSTAGED CHANGES ===")
+                diff_sections.append(unstaged_diff)
+
+            # 4. Untracked files (show them as new files)
+            result = subprocess.run(
+                ["git", "ls-files", "--others", "--exclude-standard"],
+                capture_output=True,
+                check=True,
+                cwd=repo_path,
+                text=True,
+            )
+            untracked_files = [f.strip() for f in result.stdout.split('\n') if f.strip()]
+            if untracked_files:
+                diff_sections.append("# === UNTRACKED FILES ===")
+                for file_path in untracked_files:
+                    try:
+                        # Show the content of untracked files
+                        result = subprocess.run(
+                            ["git", "diff", "--no-index", "/dev/null", file_path],
+                            capture_output=True,
+                            cwd=repo_path,
+                            text=True,
+                        )
+                        if result.stdout.strip():
+                            diff_sections.append(result.stdout.strip())
+                    except subprocess.CalledProcessError:
+                        # If diff fails, just mention the file
+                        diff_sections.append(f"# New untracked file: {file_path}")
+
+        # Combine all diff sections
+        if not diff_sections:
+            scope_desc = "committed, staged, or unstaged" if diff_scope == "all" else "committed"
             raise GitRepositoryError(
                 f"No changes found between current branch and '{base_branch}'. "
-                "Make sure you have committed changes on your feature branch."
+                f"Make sure you have {scope_desc} changes."
             )
 
-        return diff_output
+        return "\n\n".join(diff_sections)
 
     except subprocess.CalledProcessError as e:
         raise GitRepositoryError(f"Failed to generate diff: {e}")

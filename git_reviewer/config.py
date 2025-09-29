@@ -17,6 +17,7 @@ DEFAULT_CONFIG = {
     "git": {
         "context_lines": 3,
         "base_branch": "main",
+        "diff_scope": "all",  # "all" (committed+staged+unstaged) or "committed" (committed only)
     },
     "paths": {
         "template": "review.template.yml",

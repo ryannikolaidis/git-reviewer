@@ -1,6 +1,5 @@
 """Python API for git-reviewer."""
 
-import time
 from pathlib import Path
 from typing import Any
 
@@ -8,7 +7,6 @@ from .config import get_models_config, load_config
 from .context import build_repo_context, get_context_summary, resolve_context_paths
 from .errors import GitReviewerError
 from .git_integration import generate_diff, validate_and_prepare_repo
-from .models import ReviewConfig, ReviewResult
 from .nllm_runner import NLLMRunner
 from .template import format_prompt_for_nllm, populate_template
 
@@ -24,7 +22,7 @@ def review_repository(
     retries: int | None = None,
     config_override: dict[str, Any] | None = None,
     template_path: str | None = None,
-) -> ReviewResult:
+):
     """
     Review git repository changes using AI models.
 
@@ -41,7 +39,7 @@ def review_repository(
         template_path: Path to custom template file
 
     Returns:
-        ReviewResult object with results, errors, and metadata
+        Raw nllm.NllmResults object
 
     Raises:
         GitReviewerError: For various error conditions
@@ -84,7 +82,7 @@ def review_repository(
 
         # Generate diff
         diff_content = generate_diff(
-            repo_path_obj, git_config["base_branch"], git_config["context_lines"]
+            repo_path_obj, git_config["base_branch"], git_config["context_lines"], git_config["diff_scope"]
         )
 
         # Process context files
@@ -126,45 +124,8 @@ def review_repository(
             else:
                 nllm_output_dir = repo_path_obj / "git-reviewer-results"
 
-        execution_result = runner.run_review(model_configs, prompt, nllm_output_dir, parallel=True)
-
-        # Build metadata
-        end_time = time.time()
-        execution_time = end_time - start_time
-
-        # Get actual output directory from nllm
-        actual_output_dir = execution_result.get("output_dir", nllm_output_dir)
-
-        review_config = ReviewConfig(
-            repo_path=repo_path_obj,
-            models=[m["name"] for m in model_configs],
-            context_files=context_file_paths,
-            base_branch=git_config["base_branch"],
-            context_lines=git_config["context_lines"],
-            template_path=template_path_obj,
-            output_dir=actual_output_dir,
-            parallel=True,
-        )
-
-        metadata = {
-            "git_info": git_info,
-            "context_summary": context_summary,
-            "review_config": review_config.to_dict(),
-            "execution_time": execution_time,
-            "nllm_info": nllm_info,
-            "warning": warning,
-            "prompt_length": len(prompt),
-        }
-
-        # Create result
-        result = ReviewResult(
-            success=execution_result["success_count"] > 0,
-            results=execution_result["results"],
-            errors={name: info["error"] for name, info in execution_result["errors"].items()},
-            metadata=metadata,
-        )
-
-        return result
+        # Return raw nllm results directly
+        return runner.run_review(model_configs, prompt, nllm_output_dir, parallel=True)
 
     except Exception as e:
         if isinstance(e, GitReviewerError):
