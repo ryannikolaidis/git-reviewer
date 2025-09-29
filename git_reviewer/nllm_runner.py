@@ -31,7 +31,6 @@ class NLLMRunner:
         models: list[dict[str, str]],
         prompt: str,
         output_dir: Path | None = None,
-        parallel: bool | None = None,
     ):
         """Execute review using nllm Python API."""
         if not models:
@@ -68,7 +67,6 @@ class NLLMRunner:
                 cli_models=cli_models,
                 cli_model_options=cli_model_options,
                 outdir=nllm_outdir,
-                parallel=self.defaults.get("parallel", 4),
                 timeout=self.defaults.get("timeout", 120),
                 retries=self.defaults.get("retries", 0),
                 stream=False,  # Disable streaming for API usage

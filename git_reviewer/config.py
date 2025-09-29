@@ -10,7 +10,6 @@ from .errors import ConfigurationError
 DEFAULT_CONFIG = {
     "models": [],
     "defaults": {
-        "parallel": 3,
         "timeout": 120,
         "retries": 1,
     },
@@ -94,7 +93,7 @@ def validate_config(config: dict[str, Any]) -> None:
     if not isinstance(defaults, dict):
         raise ConfigurationError("'defaults' must be a dictionary")
 
-    for key in ["parallel", "timeout", "retries"]:
+    for key in ["timeout", "retries"]:
         if key in defaults:
             value = defaults[key]
             if not isinstance(value, int) or value < 0:
@@ -186,7 +185,6 @@ def create_default_config() -> dict[str, Any]:
             },
         ],
         "defaults": {
-            "parallel": 3,
             "timeout": 120,
             "retries": 1,
             "outdir": None,  # Use nllm-style outdir

@@ -154,8 +154,8 @@ def review(
 
         console.print(f"[blue]Running review with {len(model_configs)} models...[/blue]")
 
-        # Execute review (always in parallel)
-        nllm_results = runner.run_review(model_configs, prompt, nllm_output_dir, parallel=True)
+        # Execute review
+        nllm_results = runner.run_review(model_configs, prompt, nllm_output_dir)
 
         # Display results
         display_nllm_results(nllm_results, verbose)
@@ -303,26 +303,38 @@ def display_nllm_results(nllm_results, verbose: bool = False) -> None:
         for result in successes:
             console.print(f"\n[bold cyan]{result.model}:[/bold cyan]")
 
-            # Prefer parsed JSON from nllm if available, fallback to raw output
+            # Extract summary from the parsed JSON response
+            summary_output = None
+
             if hasattr(result, 'json') and result.json is not None:
-                # nllm already parsed the JSON
-                output = json.dumps(result.json, indent=2)
+                # Use nllm's parsed JSON
+                parsed_data = result.json
             else:
-                output = result.text
-                if output:
-                    # Try to pretty-print JSON manually
-                    try:
-                        parsed = json.loads(output)
-                        output = json.dumps(parsed, indent=2)
-                    except json.JSONDecodeError:
-                        pass  # Keep as string
+                # Try to parse JSON manually
+                try:
+                    parsed_data = json.loads(result.text) if result.text else None
+                except json.JSONDecodeError:
+                    parsed_data = None
 
-            if output:
-                # Truncate very long output unless verbose
-                if not verbose and len(output) > 1000:
-                    output = output[:1000] + "\n... (truncated, use --verbose for full output)"
+            if parsed_data and isinstance(parsed_data, dict):
+                # Look for summary key in the response
+                if 'summary' in parsed_data:
+                    summary_output = json.dumps(parsed_data['summary'], indent=2)
+                elif verbose:
+                    # If verbose, show full response
+                    summary_output = json.dumps(parsed_data, indent=2)
+                else:
+                    # Show just the keys available if no summary found
+                    available_keys = list(parsed_data.keys())
+                    summary_output = f"Available keys: {', '.join(available_keys)}\n(Use --verbose to see full output)"
+            elif result.text:
+                # Fallback to raw text if not JSON
+                summary_output = result.text
+                if not verbose and len(summary_output) > 200:
+                    summary_output = summary_output[:200] + "\n... (truncated, use --verbose for full output)"
 
-                console.print(Panel(output, border_style="green"))
+            if summary_output:
+                console.print(Panel(summary_output, border_style="green"))
             else:
                 console.print("[dim]No output[/dim]")
 

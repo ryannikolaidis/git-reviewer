@@ -125,7 +125,7 @@ def review_repository(
                 nllm_output_dir = repo_path_obj / "git-reviewer-results"
 
         # Return raw nllm results directly
-        return runner.run_review(model_configs, prompt, nllm_output_dir, parallel=True)
+        return runner.run_review(model_configs, prompt, nllm_output_dir)
 
     except Exception as e:
         if isinstance(e, GitReviewerError):
