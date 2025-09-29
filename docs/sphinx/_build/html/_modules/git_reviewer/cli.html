@@ -73,7 +73,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../api.html#git_reviewer.cli.review"><code class="docutils literal notranslate"><span class="pre">review()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../api.html#git_reviewer.cli.init_config"><code class="docutils literal notranslate"><span class="pre">init_config()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../api.html#git_reviewer.cli.check"><code class="docutils literal notranslate"><span class="pre">check()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api.html#git_reviewer.cli.display_results"><code class="docutils literal notranslate"><span class="pre">display_results()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api.html#git_reviewer.cli.display_nllm_results"><code class="docutils literal notranslate"><span class="pre">display_nllm_results()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../api.html#git_reviewer.cli.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
 </li>
@@ -158,6 +158,7 @@
         <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;--context-lines&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Number of context lines in git diff&quot;</span>
     <span class="p">),</span>
     <span class="n">base_branch</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;--base-branch&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Base branch for diff&quot;</span><span class="p">),</span>
+    <span class="n">diff_scope</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;--diff-scope&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Diff scope: &#39;all&#39; (committed+staged+unstaged) or &#39;committed&#39; (committed only)&quot;</span><span class="p">),</span>
     <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;--timeout&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Timeout per model in seconds&quot;</span><span class="p">),</span>
     <span class="n">retries</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;--retries&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Number of retries per model&quot;</span><span class="p">),</span>
     <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;--verbose&quot;</span><span class="p">,</span> <span class="s2">&quot;-v&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Show detailed output&quot;</span><span class="p">),</span>
@@ -179,6 +180,11 @@
             <span class="n">config_override</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;git&quot;</span><span class="p">,</span> <span class="p">{})[</span><span class="s2">&quot;context_lines&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">context_lines</span>
         <span class="k">if</span> <span class="n">base_branch</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">config_override</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;git&quot;</span><span class="p">,</span> <span class="p">{})[</span><span class="s2">&quot;base_branch&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">base_branch</span>
+        <span class="k">if</span> <span class="n">diff_scope</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">diff_scope</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;all&quot;</span><span class="p">,</span> <span class="s2">&quot;committed&quot;</span><span class="p">]:</span>
+                <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[red]Invalid diff scope &#39;</span><span class="si">{</span><span class="n">diff_scope</span><span class="si">}</span><span class="s2">&#39;. Must be &#39;all&#39; or &#39;committed&#39;.[/red]&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">typer</span><span class="o">.</span><span class="n">Exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">config_override</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;git&quot;</span><span class="p">,</span> <span class="p">{})[</span><span class="s2">&quot;diff_scope&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">diff_scope</span>
         <span class="k">if</span> <span class="n">timeout</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">config_override</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;defaults&quot;</span><span class="p">,</span> <span class="p">{})[</span><span class="s2">&quot;timeout&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">timeout</span>
         <span class="k">if</span> <span class="n">retries</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -207,7 +213,7 @@
 
         <span class="c1"># Generate diff</span>
         <span class="n">diff_content</span> <span class="o">=</span> <span class="n">generate_diff</span><span class="p">(</span>
-            <span class="n">repo_path_obj</span><span class="p">,</span> <span class="n">git_config</span><span class="p">[</span><span class="s2">&quot;base_branch&quot;</span><span class="p">],</span> <span class="n">git_config</span><span class="p">[</span><span class="s2">&quot;context_lines&quot;</span><span class="p">]</span>
+            <span class="n">repo_path_obj</span><span class="p">,</span> <span class="n">git_config</span><span class="p">[</span><span class="s2">&quot;base_branch&quot;</span><span class="p">],</span> <span class="n">git_config</span><span class="p">[</span><span class="s2">&quot;context_lines&quot;</span><span class="p">],</span> <span class="n">git_config</span><span class="p">[</span><span class="s2">&quot;diff_scope&quot;</span><span class="p">]</span>
         <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
@@ -262,24 +268,41 @@
 
         <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[blue]Running review with </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">model_configs</span><span class="p">)</span><span class="si">}</span><span class="s2"> models...[/blue]&quot;</span><span class="p">)</span>
 
-        <span class="c1"># Execute review (always in parallel)</span>
-        <span class="n">execution_result</span> <span class="o">=</span> <span class="n">runner</span><span class="o">.</span><span class="n">run_review</span><span class="p">(</span><span class="n">model_configs</span><span class="p">,</span> <span class="n">prompt</span><span class="p">,</span> <span class="n">nllm_output_dir</span><span class="p">,</span> <span class="n">parallel</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="c1"># Execute review</span>
+        <span class="n">nllm_results</span> <span class="o">=</span> <span class="n">runner</span><span class="o">.</span><span class="n">run_review</span><span class="p">(</span><span class="n">model_configs</span><span class="p">,</span> <span class="n">prompt</span><span class="p">,</span> <span class="n">nllm_output_dir</span><span class="p">)</span>
 
         <span class="c1"># Display results</span>
-        <span class="n">display_results</span><span class="p">(</span><span class="n">execution_result</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+        <span class="n">display_nllm_results</span><span class="p">(</span><span class="n">nllm_results</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
 
         <span class="c1"># Show where results are actually saved (from nllm)</span>
-        <span class="n">actual_output_dir</span> <span class="o">=</span> <span class="n">execution_result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;output_dir&quot;</span><span class="p">,</span> <span class="n">nllm_output_dir</span><span class="p">)</span>
+        <span class="n">actual_output_dir</span> <span class="o">=</span> <span class="n">nllm_output_dir</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">cli_args</span> <span class="o">=</span> <span class="n">nllm_results</span><span class="o">.</span><span class="n">manifest</span><span class="o">.</span><span class="n">cli_args</span>
+            <span class="k">if</span> <span class="s1">&#39;-o&#39;</span> <span class="ow">in</span> <span class="n">cli_args</span><span class="p">:</span>
+                <span class="n">output_idx</span> <span class="o">=</span> <span class="n">cli_args</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;-o&#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">output_idx</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">cli_args</span><span class="p">):</span>
+                    <span class="n">base_output_dir</span> <span class="o">=</span> <span class="n">cli_args</span><span class="p">[</span><span class="n">output_idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+                    <span class="n">base_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">base_output_dir</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">base_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                        <span class="n">timestamped_dirs</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">base_path</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()</span>
+                                          <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">is_dir</span><span class="p">()</span> <span class="ow">and</span> <span class="n">d</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()]</span>
+                        <span class="k">if</span> <span class="n">timestamped_dirs</span><span class="p">:</span>
+                            <span class="n">actual_output_dir</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">timestamped_dirs</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">d</span><span class="p">:</span> <span class="n">d</span><span class="o">.</span><span class="n">stat</span><span class="p">()</span><span class="o">.</span><span class="n">st_mtime</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">AttributeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">,</span> <span class="ne">OSError</span><span class="p">):</span>
+            <span class="k">pass</span>
+
         <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[cyan]📁 Full results saved to: [bold]</span><span class="si">{</span><span class="n">actual_output_dir</span><span class="si">}</span><span class="s2">[/bold][/cyan]&quot;</span><span class="p">)</span>
 
+        <span class="c1"># Count successes and failures</span>
+        <span class="n">successes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">([</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">nllm_results</span><span class="o">.</span><span class="n">results</span> <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="s2">&quot;ok&quot;</span><span class="p">])</span>
+        <span class="n">failures</span> <span class="o">=</span> <span class="nb">len</span><span class="p">([</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">nllm_results</span><span class="o">.</span><span class="n">results</span> <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status</span> <span class="o">!=</span> <span class="s2">&quot;ok&quot;</span><span class="p">])</span>
+
         <span class="c1"># Exit with appropriate code</span>
-        <span class="k">if</span> <span class="n">execution_result</span><span class="p">[</span><span class="s2">&quot;success_count&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">successes</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s2">&quot;[red]All models failed. See errors above.[/red]&quot;</span><span class="p">)</span>
             <span class="k">raise</span> <span class="n">typer</span><span class="o">.</span><span class="n">Exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">execution_result</span><span class="p">[</span><span class="s2">&quot;error_count&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;[yellow]Completed with </span><span class="si">{</span><span class="n">execution_result</span><span class="p">[</span><span class="s1">&#39;error_count&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> model failures.[/yellow]&quot;</span>
-            <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">failures</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[yellow]Completed with </span><span class="si">{</span><span class="n">failures</span><span class="si">}</span><span class="s2"> model failures.[/yellow]&quot;</span><span class="p">)</span>
             <span class="k">raise</span> <span class="n">typer</span><span class="o">.</span><span class="n">Exit</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s2">&quot;[green]Review completed successfully![/green]&quot;</span><span class="p">)</span>
@@ -388,59 +411,72 @@
 
 
 
-<div class="viewcode-block" id="display_results">
-<a class="viewcode-back" href="../../api.html#git_reviewer.cli.display_results">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">display_results</span><span class="p">(</span><span class="n">execution_result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Display review execution results.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="display_nllm_results">
+<a class="viewcode-back" href="../../api.html#git_reviewer.cli.display_nllm_results">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">display_nllm_results</span><span class="p">(</span><span class="n">nllm_results</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Display nllm results directly.&quot;&quot;&quot;</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 
-    <span class="n">results</span> <span class="o">=</span> <span class="n">execution_result</span><span class="p">[</span><span class="s2">&quot;results&quot;</span><span class="p">]</span>
-    <span class="n">errors</span> <span class="o">=</span> <span class="n">execution_result</span><span class="p">[</span><span class="s2">&quot;errors&quot;</span><span class="p">]</span>
+    <span class="n">successes</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">nllm_results</span><span class="o">.</span><span class="n">results</span> <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="s2">&quot;ok&quot;</span><span class="p">]</span>
+    <span class="n">failures</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">nllm_results</span><span class="o">.</span><span class="n">results</span> <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status</span> <span class="o">!=</span> <span class="s2">&quot;ok&quot;</span><span class="p">]</span>
 
-    <span class="k">if</span> <span class="n">results</span><span class="p">:</span>
-        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[green]✓ </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">)</span><span class="si">}</span><span class="s2"> models completed successfully:[/green]&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">successes</span><span class="p">:</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[green]✓ </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">successes</span><span class="p">)</span><span class="si">}</span><span class="s2"> models completed successfully:[/green]&quot;</span><span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">results</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[bold cyan]</span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2">:[/bold cyan]&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">successes</span><span class="p">:</span>
+            <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[bold cyan]</span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">model</span><span class="si">}</span><span class="s2">:[/bold cyan]&quot;</span><span class="p">)</span>
 
-            <span class="c1"># Prefer parsed JSON from nllm if available, fallback to raw output</span>
-            <span class="k">if</span> <span class="s2">&quot;parsed_output&quot;</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
-                <span class="c1"># nllm already parsed the JSON</span>
-                <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
-                <span class="n">output</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;parsed_output&quot;</span><span class="p">],</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+            <span class="c1"># Extract summary from the parsed JSON response</span>
+            <span class="n">summary_output</span> <span class="o">=</span> <span class="kc">None</span>
+
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s1">&#39;json&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">result</span><span class="o">.</span><span class="n">json</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># Use nllm&#39;s parsed JSON</span>
+                <span class="n">parsed_data</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">json</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">output</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;output&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">output</span><span class="p">:</span>
-                    <span class="c1"># Try to pretty-print JSON manually</span>
-                    <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
-                    <span class="k">try</span><span class="p">:</span>
-                        <span class="n">parsed</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
-                        <span class="n">output</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">parsed</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-                    <span class="k">except</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONDecodeError</span><span class="p">:</span>
-                        <span class="k">pass</span>  <span class="c1"># Keep as string</span>
+                <span class="c1"># Try to parse JSON manually</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">parsed_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">text</span><span class="p">)</span> <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">text</span> <span class="k">else</span> <span class="kc">None</span>
+                <span class="k">except</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONDecodeError</span><span class="p">:</span>
+                    <span class="n">parsed_data</span> <span class="o">=</span> <span class="kc">None</span>
 
-            <span class="k">if</span> <span class="n">output</span><span class="p">:</span>
-                <span class="c1"># Truncate very long output unless verbose</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">verbose</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">output</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1000</span><span class="p">:</span>
-                    <span class="n">output</span> <span class="o">=</span> <span class="n">output</span><span class="p">[:</span><span class="mi">1000</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">... (truncated, use --verbose for full output)&quot;</span>
+            <span class="k">if</span> <span class="n">parsed_data</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">parsed_data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                <span class="c1"># Look for summary key in the response</span>
+                <span class="k">if</span> <span class="s1">&#39;summary&#39;</span> <span class="ow">in</span> <span class="n">parsed_data</span><span class="p">:</span>
+                    <span class="n">summary_output</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">parsed_data</span><span class="p">[</span><span class="s1">&#39;summary&#39;</span><span class="p">],</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">verbose</span><span class="p">:</span>
+                    <span class="c1"># If verbose, show full response</span>
+                    <span class="n">summary_output</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">parsed_data</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># Show just the keys available if no summary found</span>
+                    <span class="n">available_keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">parsed_data</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+                    <span class="n">summary_output</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Available keys: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">available_keys</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="s2">(Use --verbose to see full output)&quot;</span>
+            <span class="k">elif</span> <span class="n">result</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
+                <span class="c1"># Fallback to raw text if not JSON</span>
+                <span class="n">summary_output</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">text</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">verbose</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">summary_output</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">200</span><span class="p">:</span>
+                    <span class="n">summary_output</span> <span class="o">=</span> <span class="n">summary_output</span><span class="p">[:</span><span class="mi">200</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">... (truncated, use --verbose for full output)&quot;</span>
 
-                <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">Panel</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">border_style</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">summary_output</span><span class="p">:</span>
+                <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">Panel</span><span class="p">(</span><span class="n">summary_output</span><span class="p">,</span> <span class="n">border_style</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s2">&quot;[dim]No output[/dim]&quot;</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">errors</span><span class="p">:</span>
-        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[red]✗ </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span><span class="si">}</span><span class="s2"> models failed:[/red]&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">failures</span><span class="p">:</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[red]✗ </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">failures</span><span class="p">)</span><span class="si">}</span><span class="s2"> models failed:[/red]&quot;</span><span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">error_info</span> <span class="ow">in</span> <span class="n">errors</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[bold red]</span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2">:[/bold red]&quot;</span><span class="p">)</span>
-            <span class="n">error_msg</span> <span class="o">=</span> <span class="n">error_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;error&quot;</span><span class="p">,</span> <span class="s2">&quot;Unknown error&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">failures</span><span class="p">:</span>
+            <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[bold red]</span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">model</span><span class="si">}</span><span class="s2">:[/bold red]&quot;</span><span class="p">)</span>
+            <span class="n">error_msg</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">stderr_tail</span> <span class="ow">or</span> <span class="sa">f</span><span class="s2">&quot;Model </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">status</span><span class="si">}</span><span class="s2">: exit code </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">exit_code</span><span class="si">}</span><span class="s2">&quot;</span>
             <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[red]</span><span class="si">{</span><span class="n">error_msg</span><span class="si">}</span><span class="s2">[/red]&quot;</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-                <span class="n">cmd</span> <span class="o">=</span> <span class="n">error_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;command&quot;</span><span class="p">,</span> <span class="s2">&quot;unknown&quot;</span><span class="p">)</span>
+                <span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">command</span><span class="p">)</span>
                 <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[dim]Command: </span><span class="si">{</span><span class="n">cmd</span><span class="si">}</span><span class="s2">[/dim]&quot;</span><span class="p">)</span>
 
-                <span class="k">if</span> <span class="n">error_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;output&quot;</span><span class="p">):</span>
-                    <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[dim]Output: </span><span class="si">{</span><span class="n">error_info</span><span class="p">[</span><span class="s1">&#39;output&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">[/dim]&quot;</span><span class="p">)</span></div>
+                <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
+                    <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[dim]Output: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">[/dim]&quot;</span><span class="p">)</span></div>
+
+
 
 
 
