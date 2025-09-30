@@ -17,6 +17,7 @@ git-reviewer analyzes git repository changes and generates detailed code reviews
 - **Context-Aware**: Include additional context files to inform the review process
 - **Flexible Configuration**: Global and local configuration with YAML-based settings
 - **Rich Output**: Beautiful terminal output with JSON formatting and result summaries
+- **Streaming Results**: Immediate output directory creation and incremental result writing as models complete
 - **Python API**: Use git-reviewer programmatically in your own tools
 - **nllm Integration**: Built on the nllm library for robust multi-model execution
 - **Comprehensive Change Explanation**: Each review includes an exhaustive explanation field that documents every change in the diff
@@ -181,7 +182,7 @@ for result in nllm_results.results:
 
 ## Review Output Format
 
-git-reviewer generates structured JSON output with comprehensive information about your code changes:
+git-reviewer generates structured JSON output with comprehensive information about your code changes. Results are written immediately as each model completes, providing rapid feedback during multi-model reviews:
 
 ### Key Output Sections
 

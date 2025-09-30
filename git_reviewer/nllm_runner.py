@@ -68,8 +68,8 @@ class NLLMRunner:
                 outdir=nllm_outdir,
                 timeout=self.defaults.get("timeout"),
                 retries=self.defaults.get("retries", 0),
-                stream=False,  # Disable streaming for API usage
-                quiet=True,  # Reduce console output
+                stream=True,  # Enable streaming for immediate result writing
+                quiet=False,  # Show output directory and completion notices
                 llm_args=[prompt],
             )
 
