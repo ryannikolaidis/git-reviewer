@@ -65,6 +65,8 @@ prompt: |
   ## Output — **Strict JSON Only** (no Markdown, no prose outside JSON)
   Return a single JSON object with the exact schema below. **Do not add or remove top-level keys.** Use empty arrays where applicable. Keep messages concise and specific. Use absolute line ranges from the diff whenever possible.
 
+  **CRITICAL: The `explanation` section must be exhaustive and comprehensive.** Document every single change in the diff, explaining what each modification does, why it was made, and how it affects the system. Leave no change unexplained - this field should serve as a complete technical documentation of all changes.
+
   ### JSON Schema
   ```json
   {
@@ -138,6 +140,27 @@ prompt: |
     "approval": {
       "decision": "APPROVE|APPROVE_WITH_NITS|REQUEST_CHANGES",
       "min_changes_to_ship": ["If not APPROVE, enumerate the minimum required"]
+    },
+    "explanation": {
+      "overview": "Comprehensive high-level summary of all changes in the diff",
+      "detailed_analysis": [
+        {
+          "file": "path/to/file.ext",
+          "change_type": "added|modified|deleted|renamed|moved",
+          "lines_added": 0,
+          "lines_removed": 0,
+          "purpose": "What this change accomplishes",
+          "technical_details": "How the change works technically",
+          "dependencies": ["List of other files/components this change affects"],
+          "business_logic": "Business reasoning behind the change",
+          "implementation_notes": "Key implementation decisions and patterns used"
+        }
+      ],
+      "architectural_impact": "How these changes affect the overall system architecture",
+      "data_flow_changes": "How data flows through the system differently after these changes",
+      "integration_points": "External systems, APIs, or services that are affected",
+      "behavioral_changes": "How user or system behavior will change",
+      "rollback_considerations": "What would be needed to undo these changes"
     }
   }
   ```

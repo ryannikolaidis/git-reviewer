@@ -90,6 +90,7 @@ Detailed JSON schema with specific fields:
 - **summary**: Overall assessment and recommendation
 - **blocking_issues**: Critical problems that must be fixed
 - **findings**: Non-blocking issues with severity levels
+- **explanation**: **NEW** - Exhaustive documentation of every change in the diff
 - **security_review**: Security-specific analysis
 - **performance_notes**: Performance considerations
 - **testing_gaps**: Missing test coverage
@@ -205,6 +206,15 @@ The default template enforces a specific JSON schema designed for structured ana
   },
   "blocking_issues": [...],
   "findings": [...],
+  "explanation": {
+    "overview": "Comprehensive summary of all changes",
+    "detailed_analysis": [...],
+    "architectural_impact": "System-wide effects",
+    "data_flow_changes": "How data flows differently",
+    "integration_points": "Affected external systems",
+    "behavioral_changes": "Changes in behavior",
+    "rollback_considerations": "Rollback requirements"
+  },
   "security_review": {...},
   "performance_notes": [...],
   "testing_gaps": [...],
@@ -219,6 +229,7 @@ The default template enforces a specific JSON schema designed for structured ana
 3. **Severity Classification**: Clear distinction between blocking and non-blocking issues
 4. **Actionable Output**: Every finding includes specific remediation steps
 5. **Risk Assessment**: Quantified risk evaluation for decision making
+6. **Exhaustive Documentation**: Complete explanation of all changes for audit trails and knowledge transfer
 
 ### Display Integration
 

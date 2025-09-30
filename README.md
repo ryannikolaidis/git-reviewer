@@ -19,6 +19,7 @@ git-reviewer analyzes git repository changes and generates detailed code reviews
 - **Rich Output**: Beautiful terminal output with JSON formatting and result summaries
 - **Python API**: Use git-reviewer programmatically in your own tools
 - **nllm Integration**: Built on the nllm library for robust multi-model execution
+- **Comprehensive Change Explanation**: Each review includes an exhaustive explanation field that documents every change in the diff
 
 ## Installation
 
@@ -169,9 +170,57 @@ for result in nllm_results.results:
             # Use structured JSON output
             summary = result.json.get('summary', {})
             print(f"Issues found: {len(summary.get('issues', []))}")
+
+            # Access the comprehensive explanation field
+            explanation = result.json.get('explanation', {})
+            print(f"Overview: {explanation.get('overview', 'N/A')}")
+            print(f"Files analyzed: {len(explanation.get('detailed_analysis', []))}")
         else:
             # Use raw text output
             print(f"Review: {result.text[:200]}...")
+```
+
+## Review Output Format
+
+git-reviewer generates structured JSON output with comprehensive information about your code changes:
+
+### Key Output Sections
+
+- **summary**: High-level assessment with readiness status and risk evaluation
+- **blocking_issues**: Critical problems that must be fixed before merging
+- **findings**: Non-blocking issues categorized by severity and domain
+- **explanation**: **NEW** - Exhaustive documentation of every change in the diff
+- **security_review**: Detailed security analysis and recommendations
+- **file_summaries**: Per-file change summaries and risk assessments
+
+### Explanation Field Details
+
+The `explanation` field provides comprehensive documentation of all changes:
+
+```json
+{
+  "explanation": {
+    "overview": "High-level summary of all changes",
+    "detailed_analysis": [
+      {
+        "file": "path/to/file.ext",
+        "change_type": "added|modified|deleted|renamed|moved",
+        "lines_added": 10,
+        "lines_removed": 5,
+        "purpose": "What this change accomplishes",
+        "technical_details": "How the change works technically",
+        "dependencies": ["List of affected components"],
+        "business_logic": "Business reasoning behind the change",
+        "implementation_notes": "Key implementation decisions"
+      }
+    ],
+    "architectural_impact": "System-wide architectural effects",
+    "data_flow_changes": "How data flows differently",
+    "integration_points": "Affected external systems/APIs",
+    "behavioral_changes": "Changes in user/system behavior",
+    "rollback_considerations": "What's needed to undo changes"
+  }
+}
 ```
 
 ## Examples
