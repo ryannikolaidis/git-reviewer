@@ -10,7 +10,6 @@ from .errors import ConfigurationError
 DEFAULT_CONFIG = {
     "models": [],
     "defaults": {
-        "timeout": 120,
         "retries": 1,
     },
     "git": {
@@ -93,11 +92,17 @@ def validate_config(config: dict[str, Any]) -> None:
     if not isinstance(defaults, dict):
         raise ConfigurationError("'defaults' must be a dictionary")
 
-    for key in ["timeout", "retries"]:
-        if key in defaults:
-            value = defaults[key]
-            if not isinstance(value, int) or value < 0:
-                raise ConfigurationError(f"'defaults.{key}' must be a non-negative integer")
+    # Check timeout (optional)
+    if "timeout" in defaults:
+        timeout = defaults["timeout"]
+        if timeout is not None and (not isinstance(timeout, int) or timeout < 1):
+            raise ConfigurationError("'defaults.timeout' must be a positive integer or null for no timeout")
+
+    # Check retries (required)
+    if "retries" in defaults:
+        retries = defaults["retries"]
+        if not isinstance(retries, int) or retries < 0:
+            raise ConfigurationError("'defaults.retries' must be a non-negative integer")
 
     # Validate git settings
     git_config = config["git"]
@@ -191,7 +196,6 @@ def create_default_config() -> dict[str, Any]:
             },
         ],
         "defaults": {
-            "timeout": 120,
             "retries": 1,
             "outdir": None,  # Use nllm-style outdir
         },

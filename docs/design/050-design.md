@@ -49,8 +49,6 @@ models:
     options: ["-o", "temperature", "0.2", "--system", "Be precise and analytical"]
 
 defaults:
-  parallel: 3
-  timeout: 120
   retries: 1
 
 git:

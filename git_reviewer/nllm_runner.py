@@ -66,7 +66,7 @@ class NLLMRunner:
                 cli_models=cli_models,
                 cli_model_options=cli_model_options,
                 outdir=nllm_outdir,
-                timeout=self.defaults.get("timeout", 120),
+                timeout=self.defaults.get("timeout"),
                 retries=self.defaults.get("retries", 0),
                 stream=False,  # Disable streaming for API usage
                 quiet=True,  # Reduce console output

@@ -61,7 +61,7 @@ class NLLMRunner:
             cli_models=cli_models,
             cli_model_options=cli_model_options,
             outdir=str(output_dir) if output_dir else None,
-            timeout=self.defaults.get("timeout", 120),
+            timeout=self.defaults.get("timeout"),
             retries=self.defaults.get("retries", 0),
             stream=False,  # Disable streaming for API usage
             quiet=True,    # Reduce console output
@@ -151,7 +151,6 @@ results = nllm.run(
     cli_models=cli_models,
     cli_model_options=cli_model_options,
     outdir="/tmp/reviews",
-    timeout=120,
     retries=1,
     stream=False,
     quiet=True,
@@ -344,8 +343,7 @@ def test_nllm_integration():
             cli_models=["test-model"],
             cli_model_options=["test-model:-o:temperature:0.1"],
             outdir=None,
-            timeout=120,
-            retries=0,
+                    retries=0,
             stream=False,
             quiet=True,
             llm_args=["test prompt"]

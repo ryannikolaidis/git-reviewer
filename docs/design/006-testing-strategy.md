@@ -74,12 +74,12 @@ class TestConfigurationSystem:
     def test_load_default_config(self):
         """Test loading default configuration."""
         config = get_default_config()
-        assert config["defaults"]["timeout"] == 120
+        assert "timeout" not in config["defaults"]
         assert config["git"]["base_branch"] == "main"
 
     def test_config_merge(self):
         """Test configuration merging hierarchy."""
-        base = {"defaults": {"timeout": 120, "retries": 1}}
+        base = {"defaults": {"retries": 1}}
         override = {"defaults": {"timeout": 300}}
 
         result = deep_merge_config(base, override)
@@ -394,7 +394,6 @@ def test_config():
             {"name": "claude-3-sonnet", "options": []}
         ],
         "defaults": {
-            "timeout": 120,
             "retries": 1
         },
         "git": {

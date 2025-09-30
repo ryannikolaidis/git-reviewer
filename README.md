@@ -111,7 +111,7 @@ git-reviewer --help
 - `--base-branch`: Base branch for diff (default: main)
 - `--context-lines`: Number of context lines in git diff
 - `--diff-scope`: Diff scope ('all' or 'committed')
-- `--timeout`: Timeout per model in seconds
+- `--timeout`: Timeout per model in seconds (default: no timeout)
 - `--retries`: Number of retries per model
 - `--verbose`: Show detailed output
 
@@ -133,7 +133,6 @@ models:
     options: ["-o", "temperature", "0.0"]
 
 defaults:
-  timeout: 120
   retries: 1
   outdir: ~/code-reviews
 
@@ -368,6 +367,9 @@ models:
   # Google models
   - name: gemini-pro
     options: ["-o", "temperature", "0.2"]
+
+defaults:
+  retries: 1
 ```
 
 ## Contributing

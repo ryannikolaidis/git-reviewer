@@ -26,7 +26,6 @@ models:
     options: ["-o", "temperature", "0.0", "--system", "You are a code reviewer"]
 
 defaults:
-  timeout: 120
   retries: 1
   outdir: ~/code-reviews
 
@@ -63,7 +62,6 @@ General execution settings.
 
 ```yaml
 defaults:
-  timeout: 120        # Per-model timeout in seconds
   retries: 1          # Number of retry attempts
   outdir: null        # Output directory (null = temp)
 ```
