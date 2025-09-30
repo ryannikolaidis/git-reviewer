@@ -191,7 +191,7 @@ def review(
         except (AttributeError, ValueError, OSError):
             pass
 
-        console.print(f"\n[cyan]📁 Full results saved to: [bold]{actual_output_dir}[/bold][/cyan]")
+        console.print(f"\n[cyan]Full results saved to: [bold]{actual_output_dir}[/bold][/cyan]")
 
         # Count successes and failures
         successes = len([r for r in nllm_results.results if r.status == "ok"])
@@ -260,11 +260,11 @@ def check() -> None:
     # Check configuration
     try:
         config = load_config()
-        console.print("[green]✓[/green] Configuration loaded successfully")
+        console.print("[green]OK[/green] Configuration loaded successfully")
 
         models = config.get("models", [])
         if models:
-            console.print(f"[green]✓[/green] Found {len(models)} configured models")
+            console.print(f"[green]OK[/green] Found {len(models)} configured models")
             if console.is_terminal:
                 table = Table(title="Configured Models")
                 table.add_column("Model", style="cyan")
@@ -276,10 +276,10 @@ def check() -> None:
 
                 console.print(table)
         else:
-            console.print("[yellow]⚠[/yellow] No models configured")
+            console.print("[yellow]WARNING[/yellow] No models configured")
 
     except Exception as e:
-        console.print(f"[red]✗[/red] Configuration error: {e}")
+        console.print(f"[red]ERROR[/red] Configuration error: {e}")
         return
 
     # Check nllm
@@ -287,9 +287,9 @@ def check() -> None:
     nllm_available, nllm_info = runner.check_nllm_available()
 
     if nllm_available:
-        console.print(f"[green]✓[/green] nllm available: {nllm_info}")
+        console.print(f"[green]OK[/green] nllm available: {nllm_info}")
     else:
-        console.print(f"[red]✗[/red] nllm not available: {nllm_info}")
+        console.print(f"[red]ERROR[/red] nllm not available: {nllm_info}")
         return
 
     # Check git in current directory
@@ -297,9 +297,9 @@ def check() -> None:
         from .git_integration import validate_git_repo
 
         validate_git_repo(Path.cwd())
-        console.print("[green]✓[/green] Current directory is a valid git repository")
+        console.print("[green]OK[/green] Current directory is a valid git repository")
     except GitRepositoryError as e:
-        console.print(f"[yellow]⚠[/yellow] Current directory: {e}")
+        console.print(f"[yellow]WARNING[/yellow] Current directory: {e}")
 
     console.print("\n[green]git-reviewer is ready to use![/green]")
 
@@ -312,7 +312,7 @@ def display_nllm_results(nllm_results, verbose: bool = False) -> None:
     failures = [r for r in nllm_results.results if r.status != "ok"]
 
     if successes:
-        console.print(f"\n[green]✓ {len(successes)} models completed successfully:[/green]")
+        console.print(f"\n[green]SUCCESS: {len(successes)} models completed successfully:[/green]")
 
         for result in successes:
             console.print(f"\n[bold cyan]{result.model}:[/bold cyan]")

@@ -184,6 +184,19 @@ for result in nllm_results.results:
 
 git-reviewer generates structured JSON output with comprehensive information about your code changes. Results are written immediately as each model completes, providing rapid feedback during multi-model reviews:
 
+**Example execution:**
+```bash
+$ git-reviewer review --model gpt-4 --model claude-3-sonnet
+
+Reviewing repository: /path/to/repo
+Running review with 2 models...
+
+[Live Progress Table showing model completion status]
+
+SUCCESS: All 2 models completed successfully
+Full results saved to: /tmp/git-reviews/2025-01-01_12-30-45
+```
+
 ### Key Output Sections
 
 - **summary**: High-level assessment with readiness status and risk evaluation
