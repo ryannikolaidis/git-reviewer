@@ -161,7 +161,7 @@ def review(
         if verbose:
             console.print(f"[dim]nllm version: {nllm_info}[/dim]")
 
-        console.print(f"[blue]Running review with {len(model_configs)} models...[/blue]")
+        console.print(f"[green]Running review with {len(model_configs)} models...[/green]")
 
         # Execute review
         nllm_results = runner.run_review(model_configs, prompt, nllm_output_dir)

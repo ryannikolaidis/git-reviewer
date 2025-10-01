@@ -266,7 +266,7 @@
         <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
             <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[dim]nllm version: </span><span class="si">{</span><span class="n">nllm_info</span><span class="si">}</span><span class="s2">[/dim]&quot;</span><span class="p">)</span>
 
-        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[blue]Running review with </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">model_configs</span><span class="p">)</span><span class="si">}</span><span class="s2"> models...[/blue]&quot;</span><span class="p">)</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[green]Running review with </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">model_configs</span><span class="p">)</span><span class="si">}</span><span class="s2"> models...[/green]&quot;</span><span class="p">)</span>
 
         <span class="c1"># Execute review</span>
         <span class="n">nllm_results</span> <span class="o">=</span> <span class="n">runner</span><span class="o">.</span><span class="n">run_review</span><span class="p">(</span><span class="n">model_configs</span><span class="p">,</span> <span class="n">prompt</span><span class="p">,</span> <span class="n">nllm_output_dir</span><span class="p">)</span>
